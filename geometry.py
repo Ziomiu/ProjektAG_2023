@@ -24,8 +24,8 @@ class Point:
 class Rectangle:
     # Konstruktor klasy przyjmuje punkty
     def __init__(self, upperRight, lowerLeft):
-        self.upperRight = upperRight
-        self.lowerLeft = lowerLeft
+        self.upperRight = Point(upperRight)
+        self.lowerLeft = Point(lowerLeft)
 
     # Funkcja zwracajaca lancuch znakow
     def __str__(self):
