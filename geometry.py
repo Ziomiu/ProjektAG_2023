@@ -23,7 +23,7 @@ class Point:
 
 class Rectangle:
     # Konstruktor klasy przyjmuje punkty
-    def __init__(self, upperRight, lowerLeft):
+    def __init__(self, lowerLeft, upperRight, ):
         self.upperRight = upperRight
         self.lowerLeft = lowerLeft
 
@@ -31,7 +31,7 @@ class Rectangle:
     def __str__(self):
         return str(self.lowerLeft) + ', ' + str(self.upperRight);
 
-    # Funkcja zwracajaca obszar jako wiercholki
+    # Funkcja zwracajaca obszar jako wierzcholki
     def get_tuple(self):
         return (self.lowerLeft, self.upperRight)
 
