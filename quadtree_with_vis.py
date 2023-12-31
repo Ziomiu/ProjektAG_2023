@@ -28,17 +28,14 @@ class QuadNode:
         lower_right_rect = Rectangle(Point((half_x, lowerleft.y)), Point((upperright.x, half_y)))
         upper_right_rect = Rectangle(Point((half_x, half_y)), upperright)
 
-        self.right_upper = QuadNode(upper_right_rect, self.numofpoints, 0)
-        self.right_lower = QuadNode(lower_right_rect, self.numofpoints, 1)
-        self.left_lower = QuadNode(lower_left_rect, self.numofpoints, 2)
-        self.left_upper = QuadNode(upper_left_rect, self.numofpoints, 3)
+        self.right_upper = QuadNode(upper_right_rect, 0)
+        self.right_lower = QuadNode(lower_right_rect, 1)
+        self.left_lower = QuadNode(lower_left_rect, 2)
+        self.left_upper = QuadNode(upper_left_rect, 3)
 
     def add(self, point, vis, lines):
         vis.add_point(point.get_tuple(), color="yellow")
-        # if point.x!=last_point.x or point.y!=last_point.y:
-        #     vis.add_point()
         if not self.rec.in_scope(point):
-            # print(point,self.rec)
             pol = vis.add_polygon(((self.rec.upperRight.x, self.rec.upperRight.y),
                                    (self.rec.upperRight.x, self.rec.lowerLeft.y),
                                    (self.rec.lowerLeft.x, self.rec.lowerLeft.y),
@@ -88,7 +85,7 @@ class QuadNode:
 
 
 class QuadTree:
-    def __init__(self, rect, numofpoints, points, visbuild, visfind):
+    def __init__(self, rect, points, visbuild, visfind):
         self.rect = rect
         self.node = QuadNode(rect, -1)
         self.visbuild = visbuild

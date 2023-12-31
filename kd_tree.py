@@ -82,10 +82,10 @@ class KDTree:
         if self.vis is not None:
             if depth % 2 == 0:
                 self.vis.add_line_segment(((root.point[0], root.lower_left[1]), (root.point[0], root.upper_right[1])))
-                vis.show()
+                self.vis.show()
             else:
                 self.vis.add_line_segment(((root.lower_left[0], root.point[1]), (root.upper_right[0], root.point[1])))
-                vis.show()
+                self.vis.show()
 
         if root.right is not None:
             if depth % 2 == 0:  # oś x
@@ -120,7 +120,8 @@ class KDTree:
     def search(self, lower_left, upper_right):
         self.result = []
         if self.vis is not None:
-            self.vis.add_polygon((lower_left, (upper_right[0], lower_left[1]), upper_right, (lower_left[0], upper_right[1])))
+            self.vis.add_polygon(
+                (lower_left, (upper_right[0], lower_left[1]), upper_right, (lower_left[0], upper_right[1])))
             self.vis.add_point(self.points, color='green')
             self.vis.show()
 
@@ -160,10 +161,10 @@ def region_inside(region_ll, region_ur, ll, ur):
 
 def region_intersects(region_ll, region_ur, ll, ur):
     return (
-        point_inside(region_ll, ll, ur)
-        or point_inside(region_ur, ll, ur)
-        or point_inside(ll, region_ll, region_ur)
-        or point_inside(ur, region_ll, region_ur)
-        or point_inside((region_ll[0], region_ur[1]), ll, ur)
-        or point_inside((ll[0], ur[1]), region_ll, region_ur)
+            point_inside(region_ll, ll, ur)
+            or point_inside(region_ur, ll, ur)
+            or point_inside(ll, region_ll, region_ur)
+            or point_inside(ur, region_ll, region_ur)
+            or point_inside((region_ll[0], region_ur[1]), ll, ur)
+            or point_inside((ll[0], ur[1]), region_ll, region_ur)
     )

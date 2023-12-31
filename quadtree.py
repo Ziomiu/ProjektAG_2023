@@ -76,18 +76,16 @@ class QuadTree:
         for point in points:
             self.insert(point)
 
-    def find(self, rect, node):
-        if node.type == -1:
-            self.result = []
+    def _find(self, rect, node):
         if not rect.intersect(node.rec):
             return []
         if rect.contain(node.rec):
             return node.points
         if node.divided:
-            self.result = self.result + self.find(rect, node.right_upper)
-            self.result = self.result + self.find(rect, node.right_lower)
-            self.result = self.result + self.find(rect, node.left_lower)
-            self.result = self.result + self.find(rect, node.left_upper)
+            self.result.extend(self._find(rect, node.right_upper))
+            self.result.extend(self._find(rect, node.right_lower))
+            self.result.extend(self._find(rect, node.left_lower))
+            self.result.extend(self._find(rect, node.left_upper))
             if node.type != -1:
                 return []
         else:
@@ -95,3 +93,7 @@ class QuadTree:
                 tab = [point for point in node.points if rect.in_scope(point)]
                 return tab
         return self.result
+
+    def find(self, rect, node):
+        self.result = []
+        return self._find(rect, node)
