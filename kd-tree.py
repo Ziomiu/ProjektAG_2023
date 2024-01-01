@@ -8,11 +8,9 @@ class Node:
         self.point = point
         self.left = None
         self.right = None
-        self.upper_right = None
-        self.lower_left = None
 
 
-def partition(arr, left, right, k, idx):
+def partition(arr, left, right, idx):
     pi = arr[right][idx]
     i = left - 1
 
@@ -27,7 +25,7 @@ def partition(arr, left, right, k, idx):
 
 def quick_select(arr, left, right, k, idx):
     if left <= right:
-        pivot_index = partition(arr, left, right, k, idx)
+        pivot_index = partition(arr, left, right, idx)
         if pivot_index == k:
             return
         if pivot_index > k:
@@ -82,10 +80,10 @@ class KDTree:
         if self.vis is not None:
             if depth % 2 == 0:
                 self.vis.add_line_segment(((root.point[0], root.lower_left[1]), (root.point[0], root.upper_right[1])))
-                vis.show()
+                self.vis.show()
             else:
                 self.vis.add_line_segment(((root.lower_left[0], root.point[1]), (root.upper_right[0], root.point[1])))
-                vis.show()
+                self.vis.show()
 
         if root.right is not None:
             if depth % 2 == 0:  # oś x
@@ -118,9 +116,8 @@ class KDTree:
             self.report_subtree(root.right)
 
     def search(self, lower_left, upper_right):
-        self.result = []
         if self.vis is not None:
-            self.vis.add_polygon((lower_left, (upper_right[0], lower_left[1]), upper_right, (lower_left[0], upper_right[1])))
+            self.vis.add_polygon((lower_left, (upper_right[0], lower_left[1]), upper_right, (lower_left[0], upper_right[1])), color = 'orange')
             self.vis.add_point(self.points, color='green')
             self.vis.show()
 
