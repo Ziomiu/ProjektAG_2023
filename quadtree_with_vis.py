@@ -2,7 +2,7 @@ from geometry import *
 from visualizer.main import Visualizer
 
 
-class QuadNode:
+class QuadNodeVis:
     def __init__(self, rec, type):
         self.rec = rec
         self.points = []
@@ -28,14 +28,14 @@ class QuadNode:
         lower_right_rect = Rectangle(Point((half_x, lowerleft.y)), Point((upperright.x, half_y)))
         upper_right_rect = Rectangle(Point((half_x, half_y)), upperright)
 
-        self.right_upper = QuadNode(upper_right_rect, 0)
-        self.right_lower = QuadNode(lower_right_rect, 1)
-        self.left_lower = QuadNode(lower_left_rect, 2)
-        self.left_upper = QuadNode(upper_left_rect, 3)
+        self.right_upper = QuadNodeVis(upper_right_rect, 0)
+        self.right_lower = QuadNodeVis(lower_right_rect, 1)
+        self.left_lower = QuadNodeVis(lower_left_rect, 2)
+        self.left_upper = QuadNodeVis(upper_left_rect, 3)
 
     def add(self, point, vis, lines):
         vis.add_point(point.get_tuple(), color="yellow")
-        if not self.rec.in_scope(point):
+        if not self.rec.in_rect(point):
             pol = vis.add_polygon(((self.rec.upperRight.x, self.rec.upperRight.y),
                                    (self.rec.upperRight.x, self.rec.lowerLeft.y),
                                    (self.rec.lowerLeft.x, self.rec.lowerLeft.y),
@@ -84,10 +84,10 @@ class QuadNode:
         return True
 
 
-class QuadTree:
+class QuadTreeVis:
     def __init__(self, rect, points, visbuild, visfind):
         self.rect = rect
-        self.node = QuadNode(rect, -1)
+        self.node = QuadNodeVis(rect, -1)
         self.visbuild = visbuild
         self.visfind = visfind
         lines = []
@@ -99,16 +99,12 @@ class QuadTree:
     def insert(self, point, lines):
         self.node.add(point, self.visbuild, lines)
 
-    def insert_single(self, point):
-        point = Point(point)
-        self.insert(point)
-
     def insert_all(self, points, lines):
         points = list(map(Point, points))
         for point in points:
             self.insert(point, lines)
 
-    def find(self, rect, node):
+    def _find(self, rect, node):
         if node.type == -1:
             self.visfind.add_line_segment(
                 ((rect.upperRight.x, rect.upperRight.y), (rect.upperRight.x, rect.lowerLeft.y)), color="black")
@@ -142,10 +138,16 @@ class QuadTree:
             self.visfind.remove_figure(pol)
             return node.points
         if node.divided:
-            self.result = self.result + self.find(rect, node.right_upper)
-            self.result = self.result + self.find(rect, node.right_lower)
-            self.result = self.result + self.find(rect, node.left_lower)
-            self.result = self.result + self.find(rect, node.left_upper)
+            pol = self.visfind.add_polygon(((node.rec.upperRight.x, node.rec.upperRight.y),
+                                                (node.rec.upperRight.x, node.rec.lowerLeft.y),
+                                                (node.rec.lowerLeft.x, node.rec.lowerLeft.y),
+                                                (node.rec.lowerLeft.x, node.rec.upperRight.y)), alpha=0.3,
+                                               color="orange")
+            self.visfind.remove_figure(pol)
+            self.result.extend(self._find(rect, node.right_upper))
+            self.result.extend(self._find(rect, node.right_lower))
+            self.result.extend(self._find(rect, node.left_lower))
+            self.result.extend(self._find(rect, node.left_upper))
             if node.type != -1:
                 return []
         else:
@@ -155,9 +157,13 @@ class QuadTree:
                                                 (node.rec.lowerLeft.x, node.rec.lowerLeft.y),
                                                 (node.rec.lowerLeft.x, node.rec.upperRight.y)), alpha=0.3,
                                                color="orange")
-                tab = [point for point in node.points if rect.in_scope(point)]
+                tab = [point for point in node.points if rect.in_rect(point)]
                 for el in tab:
                     self.visfind.add_point(el.get_tuple(), color="green")
                 self.visfind.remove_figure(pol)
                 return tab
         return self.result
+
+    def find(self, rect):
+        self.result = []
+        return self._find(rect, self.node)

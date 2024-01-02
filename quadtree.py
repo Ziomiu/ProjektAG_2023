@@ -29,7 +29,7 @@ class QuadNode:
         self.left_upper = QuadNode(upper_left_rect, 3)
 
     def add(self, point):
-        if not self.rec.in_scope(point):
+        if not self.rec.in_rect(point):
             return False
         self.points.append(point)
         if len(self.points) > 1:
@@ -64,17 +64,10 @@ class QuadTree:
         self.insert_all(points)
         self.result = []
 
-    def insert(self, point):
-        self.node.add(point)
-
-    def insert_single(self, point):
-        point = Point(point)
-        self.insert(point)
-
     def insert_all(self, points):
         points = list(map(Point, points))
         for point in points:
-            self.insert(point)
+            self.node.add(point)
 
     def _find(self, rect, node):
         if not rect.intersect(node.rec):
@@ -90,10 +83,10 @@ class QuadTree:
                 return []
         else:
             if node.type != -1:
-                tab = [point for point in node.points if rect.in_scope(point)]
+                tab = [point for point in node.points if rect.in_rect(point)]
                 return tab
         return self.result
 
-    def find(self, rect, node):
+    def find(self, rect):
         self.result = []
-        return self._find(rect, node)
+        return self._find(rect, self.node)
