@@ -19,7 +19,7 @@ def test_uniform_points(n):
     kd_find_end = time.time()
     qd_build_start = time.time()
     qtree = QuadTree(Rectangle(Point((0, 0)), Point((100, 100))),
-                        points)
+                     points)
     qd_build_end = time.time()
     rect = Rectangle(Point(region[0]), Point(region[1]))
     qd_find_start = time.time()
@@ -64,7 +64,7 @@ def test_rectangle_points(n):
     kd_find_end = time.time()
     qd_build_start = time.time()
     qtree = QuadTree(Rectangle(Point((0, 0)), Point((100, 100))),
-                        points)
+                     points)
     qd_build_end = time.time()
     rect = Rectangle(Point(region[0]), Point(region[1]))
     qd_find_start = time.time()
@@ -109,7 +109,7 @@ def test_lines_points(n):
     kd_find_end = time.time()
     qd_build_start = time.time()
     qtree = QuadTree(Rectangle(Point((0, 0)), Point((100, 100))),
-                        points)
+                     points)
     qd_build_end = time.time()
     rect = Rectangle(Point(region[0]), Point(region[1]))
     qd_find_start = time.time()
@@ -154,7 +154,7 @@ def test_groups_points(n):
     kd_find_end = time.time()
     qd_build_start = time.time()
     qtree = QuadTree(Rectangle(Point((0, 0)), Point((100, 100))),
-                        points)
+                     points)
     qd_build_end = time.time()
     rect = Rectangle(Point(region[0]), Point(region[1]))
     qd_find_start = time.time()
